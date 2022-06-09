@@ -1,0 +1,82 @@
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+<!-- Load TensorFlow.js. This is required to use coco-ssd model. -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"> </script>
+<!-- Load the coco-ssd model. -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"> </script>
+<style>
+    *{
+        font-family: 'Nunito', sans-serif;
+        margin: 0;
+    }
+
+    .titulo{
+        margin: 10px auto;
+        text-align: center;
+    }
+
+    input{
+        height: 40px;
+        width: 400px;
+        border: 1px solid gray;
+        border-radius: 10px;
+        padding: 10px;
+    }
+    .container{
+        text-align: center;
+    }
+
+    img{
+        text-align: center;
+    }
+
+    .texto{
+        color: red;
+        font-size: 15px;
+        margin: 15px;
+    }
+
+    .green-text{
+        color: green;
+        font-size: 15px;
+        margin: 15px;
+    }
+
+    .center{
+        text-align: center;
+    }
+
+    .mr{
+        margin-top: 20px;
+    }
+</style>
+<h1 class="titulo">Clasificador de objetos - Test 1</h1>
+
+<div class="container">
+    <label class="texto">Ingresar URL de Imagen:</label>
+    <input type="text" placeholder="Ingresa la url de la imagen..." id="urlImage">
+</div>
+<div class="container mr">
+    <img id="img" crossorigin="anonymous"/>
+</div>
+<div class="container mr">
+    <label class="texto">Prediccion: </label><label class="green-text" id="resultado"></label>
+</div>
+<script>
+  const urlImage = document.getElementById('urlImage');
+  urlImage.addEventListener('change', (event) => {
+    const resultado = document.querySelector('img');
+    resultado.src = urlImage.value;
+    // Cargar modelo.
+    cocoSsd.load().then(model => {
+    // Deteccion de objetos en la img pasada
+    model.detect(img).then(predictions => {
+      console.log('Predictions: ', predictions);
+        const prediccion = predictions[0].class + ' - (' + predictions[0].score.toFixed(2) + '%)';
+        document.querySelector('#resultado').innerText = "";
+        document.querySelector('#resultado').append(prediccion.toUpperCase())
+    });
+  });
+});
+</script>
